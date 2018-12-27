@@ -1,0 +1,86 @@
+/*.page-header {
+    background-color: #ffa31a;
+    margin-top: 0;
+    padding: 20px 20px 20px 40px;
+}
+
+.page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
+    color: #ffffff;
+    font-size: 36pt;
+    text-decoration: none;
+}*/
+
+
+/*
+h1, h2, h3, h4{
+    font-family: 'Lobster', cursive;
+}*/
+
+
+
+
+.date {
+    color: #828282;
+    
+}
+
+/*.save {
+    float: right;
+}
+*/
+/*.post-form textarea, .post-form input {
+    width: 100%;
+}*/
+
+.top-menu, .top-menu:hover, .top-menu:visited {
+    font-size: 18px;
+    color: aliceblue;
+    /*color:white;
+    padding-top: 15px;
+    color: #ffffff;
+    float: right;
+    margin-right: 20px;*/
+}
+
+
+
+/*.post h1 a, .post h1 a:visited {
+    color: #ffa31a;
+}
+
+.post {
+    margin-bottom: 70px;
+
+}*/
+
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.box {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.footer{
+  position: fixed;
+  text-align: center;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  background-color: #164190;
+  padding: 10px; 
+}
+
+/*.comment {
+    margin: 20px 0px 20px 20px;
+    background-color:lightgreen;
+}*/

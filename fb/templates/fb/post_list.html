@@ -1,0 +1,16 @@
+
+
+{% extends "fb/base.html" %}
+
+{% block content %}
+
+    {% for post in posts %}
+    <div class="box">
+    	<h3 style="font-family: 'Lobster', cursive;">{{ post.author }}</h3>
+    	<small class="date"> at {{ post.created_date }}</small>
+    	<p>{{ post.title }}</p>
+       
+    </div>
+       
+    {% endfor %}
+{% endblock content %}
