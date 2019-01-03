@@ -1,16 +1,169 @@
-
-
-{% extends "fb/base.html" %}
-
-{% block content %}
-
-    {% for post in posts %}
-    <div class="box">
-    	<h3 style="font-family: 'Lobster', cursive;">{{ post.author }}</h3>
-    	<small class="date"> at {{ post.created_date }}</small>
-    	<p>{{ post.title }}</p>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>fb</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{% static 'css/fb.css' %}">
        
-    </div>
+
+     
+       <script type="text/javascript">
+         function showcomments(value){
+          $(".comment"+value).toggle()
+         }
+       </script>
+        
+    </head>
+    <body>
+        <nav class="navbar navbar-default" >
+
+            <div class="container-fluid" style="background-color: #4267b2;">
+                <div class="navbar-header">
+                    <a class="navbar-brand" style="color:white;">facebook</a>
+                </div>
+               
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                      <li ><a href=""class="top-menu" style="color: white;">{{ user.username }}</a></li>
+                      <li><a href="{% url 'logout' %}" class="top-menu" style="color:white;" >logout</a></li>
+
+
+                     {% else %}
+                         <li><a href="{% url 'login' %}" class="top-menu" style="color: white;">login</a></li>
+                         <li><a href="{% url 'register' %}" class="top-menu" style="color: white;">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+    </nav>
+  
+       
+        <div class="container">
+            <div class="row">
+               <div class="col-md-3 sidenav">
+                {% if user.is_authenticated %}
+               
+                   <h4>{{ user.username }}</h4>
+                    <ul class="nav nav-pills nav-stacked">
+                     <li class="active"><a href="#section1">Home</a></li>
+                     <li><a href="#section2">Messanger</a></li>
+                     <li><a href="#section3">Friends</a></li>
+                     <li><a href="#section3">Photos</a></li>
+                      
+                      <h5>shortcuts</h5>
+                      <li class=""><a href="#section1">Helath and inspriational videos</a></li>
+                     <li><a href="#section2">Messanger</a></li>
+                     <li><a href="#section3">Friends</a></li>
+                     <li><a href="#section3">Photos</a></li>
+                      </ul><br>
+                      {% endif %}
+
+                </div>
+                
+                <div class="col-md-6">
+
+                    {% if user.is_authenticated %}
+                     <form name="myform" method="POST" action="{% url 'create_post' %}" autocomplete="off" enctype="multipart/form-data">  
+                        {% csrf_token %}
+                       <input id="post"  type="text" name="post"  placeholder="  write something here !!!" /><br><br>
+                        <label><input type="file" name="myfile" style="display: none;"><span class="glyphicon glyphicon-camera" style="font-size: xx-large;color: grey; "></span></label>
+                       <button style = "float: right;" class="btn btn-primary">post</button>
+                      
+                    </form> 
+
+                    <br><br>
+                    {% endif %}
+                     
+                    {% if messages %}
+                       {% for message in messages %}
+                       <div class="alert alert-{{ message.tags }}">
+                           {{ message }}
+                       </div>
+                       {% endfor %}
+                    {% endif %}
+                    {% if user.is_authenticated %}
+    {% for post in posts %}
+              <div class="box">
+                   <h3 style="font-family: 'Lobster', cursive;">{{ post.author }}</h3>
+                   <small class="date"> at {{ post.created_date }}</small>
+                   <p>{{ post.title }}</p>
+                   {% if post.post_pics %}
+
+                     <img src="/media/{{ post.post_pics }}" style="width:-webkit-fill-available;" />
+
+                   {% endif %}
+                
+
+                   <hr>
+                    <p style="font-size: 18px;padding-left: 12px"><span class="glyphicon glyphicon-thumbs-up" style="padding-left: 12px"></span>
+                    <label><span style="padding-left: 140px" onclick="showcomments({{post.pk}})" >comments : {{post.comments.count}}</span></label>
+                    <span class="glyphicon glyphicon-share-alt" style="padding-left: 140px">share</span></p>
+
+
+              </div>
+           <div class="commentbox" >
+            {% for comment in post.comments.all %}
+                 <div class="comment{{post.pk}}" style=" display: none;">
+                  <div class="comment">
+                    <small class="date">{{ comment.created_date }}</small>
+                    <p>comment by : <strong>{{ comment.author }}</strong></p>
+                    
+                    <p>{{ comment.text|linebreaks }}</p>
+                  </div>
+                    </div>
+          {% empty %}
+                <p>No comments here yet :(</p>
+          {% endfor %}
+          <!-- <a class="btn btn-default" href="">Add comment</a> -->
+          <form name="myform" method="POST" action="{% url 'create_comment'  pk=post.pk %}" autocomplete="off" enctype="multipart/form-data">  
+                        {% csrf_token %}
+                       <input id="post"  type="text" name="comment"  placeholder="  write comments here !!!" /><br><br>
+                     
+                       <button style = "float: right;" class="btn btn-primary">comment</button>
+                      
+                    </form> 
+        </div>9
+
        
     {% endfor %}
-{% endblock content %}
+    
+
+ {% endif %}
+                </div>
+                <div class="col-md-3">
+                  {% if user.is_authenticated %}
+                    <div class="well">
+                      <p>Stories</p>
+                      <a href="#">News <span class="badge">5</span></a><br>
+                      <a href="#">Comments <span class="badge">10</span></a><br>
+                      <a href="#">Updates <span class="badge">2</span></a>
+                      
+                      <p><strong>Paris</strong></p>
+                      <p>Fri. 27 November 2015</p>
+                    
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              
+                </div>
+                
+            </div>
+        </div>
+       {% if user.is_authenticated %}
+
+
+       {% else %}
+        <div class="footer">
+          <span>facebook</span>
+        </div>
+       {% endif %}
+       
+    </body>
+
+
+</html>

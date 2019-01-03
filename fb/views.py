@@ -1,9 +1,66 @@
-from django.shortcuts import render
-from .models import Post
+from django.shortcuts import render,redirect,get_object_or_404
+from .models import Post,Comment
+from django.contrib.auth.models import User
 from django.utils import timezone
 
 # Create your views here.
 
 def post_list(request):
-	posts = Post.objects.filter(created_date__lte=timezone.now()).order_by('created_date')
+	posts = Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
+	# import ipdb;
+	# ipdb.set_trace();
 	return render(request, 'fb/post_list.html', {'posts': posts})
+
+
+
+def start(request):
+	return render(request,'fb/start.html',{})
+
+
+
+def create_post(request):
+	me=request.user
+	if request.method == 'POST':
+		posttext = request.POST.get('post')
+		postimage=request.FILES.get('myfile')
+		if (posttext != ""):
+			post = Post.objects.create(author=me,title=posttext,post_pics=postimage)
+
+		# if (postdetail != ""):
+		# 	post = Post.objects.create(author=me,title=postdetail,post_pics=post_image)
+		# post =Post.objects.create(author=me,title=postdetail)
+		return redirect('post_list')
+
+
+# def add_comment_to_post(request, pk):
+#     post = get_object_or_404(Post, pk=pk)
+#     if request.method == "POST":
+
+#         form = CommentForm(request.POST)
+#         if form.is_valid():
+
+#             comment = form.save(commit=False)
+#             comment.author = request.user
+#             comment.post = post
+#             comment.save()
+#             return redirect('post_list')
+#     else:
+#         form = CommentForm()
+#     return render(request, 'fb/add_comment_to_post.html', {'form': form})
+
+
+
+
+def create_comment(request,pk):
+	post = get_object_or_404(Post,pk=pk)
+	me = request.user
+
+	if request.method == "POST":
+		commenttext = request.POST.get('comment')
+		if (commenttext != ""):
+			comment = Comment.objects.create(author=me,post=post,text=commenttext)
+
+		return redirect('post_list')
+
+
+
