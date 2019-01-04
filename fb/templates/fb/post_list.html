@@ -29,7 +29,7 @@
                
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                      <li ><a href=""class="top-menu" style="color: white;">{{ user.username }}</a></li>
+                      <li ><a href="{% url 'profile' %}"class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" />{{ user.username }}</a></li>
                       <li><a href="{% url 'logout' %}" class="top-menu" style="color:white;" >logout</a></li>
 
 
@@ -88,8 +88,8 @@
                     {% if user.is_authenticated %}
     {% for post in posts %}
               <div class="box">
-                   <h3 style="font-family: 'Lobster', cursive;">{{ post.author }}</h3>
-                   <small class="date"> at {{ post.created_date }}</small>
+                   <h3 style="font-family: 'Lobster', cursive;"><img class="img-circle" src="{{ post.author.profile.image.url }}" height="30px" width="35px" />{{ post.author }}</h3>
+                   <small class="date"> at {{ post.created_date }}</small><hr>
                    <p>{{ post.title }}</p>
                    {% if post.post_pics %}
 
