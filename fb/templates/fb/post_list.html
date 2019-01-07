@@ -29,7 +29,7 @@
                
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                      <li ><a href=""class="top-menu" style="color: white;">{{ user.username }}</a></li>
+                      <li ><a href="{% url 'profile' %}"class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" />&nbsp{{ user.username }}</a></li>
                       <li><a href="{% url 'logout' %}" class="top-menu" style="color:white;" >logout</a></li>
 
 
@@ -88,8 +88,9 @@
                     {% if user.is_authenticated %}
     {% for post in posts %}
               <div class="box">
-                   <h3 style="font-family: 'Lobster', cursive;">{{ post.author }}</h3>
-                   <small class="date"> at {{ post.created_date }}</small>
+                   <h3 style="font-family: 'Lobster', cursive;"><img class="img-circle" src="{{ post.author.profile.image.url }}" height="30px" width="35px" />
+                   &nbsp{{ post.author }}</h3>
+                   <small class="date"> at {{ post.created_date }}</small><hr>
                    <p>{{ post.title }}</p>
                    {% if post.post_pics %}
 
@@ -126,7 +127,7 @@
                        <button style = "float: right;" class="btn btn-primary">comment</button>
                       
                     </form> 
-        </div>9
+        </div>
 
        
     {% endfor %}
@@ -137,14 +138,28 @@
                 <div class="col-md-3">
                   {% if user.is_authenticated %}
                     <div class="well">
-                      <p>Stories</p>
-                      <a href="#">News <span class="badge">5</span></a><br>
-                      <a href="#">Comments <span class="badge">10</span></a><br>
-                      <a href="#">Updates <span class="badge">2</span></a>
+                      <h2>Add Friends</h2>
+                   
+                      {% for user in users %}
+                          {% if not user in friends %}
+                        <a href="{% url 'view_profile_with_pk'  pk=user.pk %}">
+                         <h4> <img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" />&nbsp{{user.username}}<a href="{% url 'change_friends' operation='add' pk=user.pk %}">
+                          <button type="button" class="btn btn-success btn-xs">Add Friend</button></a>
+                        </h4></a>
+
+                   
                       
-                      <p><strong>Paris</strong></p>
-                      <p>Fri. 27 November 2015</p>
+                          {% endif %}
+                      
+                    {% endfor %}
+                    <h2>Friends list</h2>
+                     {% for friend in friends %}
+                    <a href="{% url 'view_profile_with_pk'  pk=friend.pk %}"><h4> <img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" />&nbsp{{friend.username}}  <a href="{% url 'change_friends' operation='remove' pk=friend.pk %}">
+                       <button type="button" class="btn btn-default  btn-xs">Remove Friend</button>
+                    </a> </h4></a>
                     
+                   
+                    {% endfor %}
                     </div>
                     {% endif %}
                   </div>

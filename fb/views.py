@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Post,Comment
+from .models import Post,Comment,Friend
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -7,9 +7,12 @@ from django.utils import timezone
 
 def post_list(request):
 	posts = Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
+	users = User.objects.exclude(id=request.user.id)
+	friend = Friend.objects.get(current_user=request.user)
+	friends = friend.users.all()
 	# import ipdb;
 	# ipdb.set_trace();
-	return render(request, 'fb/post_list.html', {'posts': posts})
+	return render(request, 'fb/post_list.html', {'posts': posts,'users':users,'friends':friends})
 
 
 
@@ -62,5 +65,13 @@ def create_comment(request,pk):
 
 		return redirect('post_list')
 
+
+def change_friends(request, operation, pk):
+    friend = User.objects.get(pk=pk)
+    if operation == 'add':
+        Friend.make_friend(request.user, friend)
+    elif operation == 'remove':
+        Friend.lose_friend(request.user, friend)
+    return redirect('post_list')	
 
 
