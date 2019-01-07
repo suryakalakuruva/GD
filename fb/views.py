@@ -7,9 +7,10 @@ from django.utils import timezone
 
 def post_list(request):
 	posts = Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
+	users =User.objects.all()
 	# import ipdb;
 	# ipdb.set_trace();
-	return render(request, 'fb/post_list.html', {'posts': posts})
+	return render(request, 'fb/post_list.html', {'posts': posts,'users':users})
 
 
 

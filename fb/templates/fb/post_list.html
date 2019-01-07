@@ -137,13 +137,10 @@
                 <div class="col-md-3">
                   {% if user.is_authenticated %}
                     <div class="well">
-                      <p>Stories</p>
-                      <a href="#">News <span class="badge">5</span></a><br>
-                      <a href="#">Comments <span class="badge">10</span></a><br>
-                      <a href="#">Updates <span class="badge">2</span></a>
-                      
-                      <p><strong>Paris</strong></p>
-                      <p>Fri. 27 November 2015</p>
+                     {% for user in users %}
+                       <h4>{{user.username}}</h4>
+                     {% endfor %}
+                    
                     
                     </div>
                     {% endif %}
