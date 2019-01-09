@@ -9,7 +9,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="{% static 'css/fb.css' %}">
-       
+
+          
 
      
        <script type="text/javascript">
@@ -29,7 +30,8 @@
                
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                      <li ><a href="{% url 'profile' %}"class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" />&nbsp{{ user.username }}</a></li>
+                      <li><a href="{% url 'profile' %}"class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" />&nbsp{{ user.username }}</a></li>
+
                       <li><a href="{% url 'logout' %}" class="top-menu" style="color:white;" >logout</a></li>
 
 
@@ -106,16 +108,17 @@
 
 
               </div>
+              <div class="comment{{post.pk}}" style=" display: none;">
            <div class="commentbox" >
             {% for comment in post.comments.all %}
-                 <div class="comment{{post.pk}}" style=" display: none;">
+                 
                   <div class="comment">
                     <small class="date">{{ comment.created_date }}</small>
                     <p>comment by : <strong>{{ comment.author }}</strong></p>
                     
                     <p>{{ comment.text|linebreaks }}</p>
                   </div>
-                    </div>
+                   
           {% empty %}
                 <p>No comments here yet :(</p>
           {% endfor %}
@@ -128,8 +131,9 @@
                       
                     </form> 
         </div>
+         </div>
 
-       
+       <br>
     {% endfor %}
     
 

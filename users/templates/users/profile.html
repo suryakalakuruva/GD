@@ -180,8 +180,11 @@ position:relative;
       </form>
     </div>
  
-
+       {% if request.user %}
         <button id="hide_edit" class="btn btn-primary" name="answer" onclick="showDiv()">Edit profile<span class="glyphicon glyphicon-pencil "></span></button><br><br>
+        {{request.user}}
+        {{user.username}}
+        {% endif %}
         <p>Profile Name <a href="">{{ user.username }}</a></p><br>
          <p>Email <a href="">{{ user.email }}</a></p><br>
           <p>Worked at <a href="">{{ user.profile.worked }}</a></p><br>
