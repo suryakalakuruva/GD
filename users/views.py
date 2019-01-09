@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
 from .models import Profile
-from  fb.models import Post
+from  fb.models import Post,Friend
 from django.utils import timezone
-
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 # Create your views here.
 
 
@@ -23,6 +24,8 @@ def register(request):
             user = authenticate(username=username,password=raw_password)
             login(request,user)
             Profile.objects.create(user=request.user)
+    
+            Friend.objects.create(current_user=request.user)
             logout(request)
 
 
@@ -33,8 +36,20 @@ def register(request):
 
 
 
+
+
+def view_profile(request, pk=None):
+    if pk:
+        user = User.objects.get(pk=pk)
+    else:
+        user = request.user
+    posts = Post.objects.filter(author=user).order_by('-created_date')
+    args = {'user': user,'posts':posts}
+    return render(request, 'users/profile.html', args)
+
+
 @login_required
-def profile(request):
+def edit_profile(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,
@@ -44,7 +59,7 @@ def profile(request):
             u_form.save()
             p_form.save()
             #messages.success(request, 'Your account has been updated!')
-            return redirect('profile')
+            return redirect('edit_profile')
 
     else:
         u_form = UserUpdateForm(instance=request.user)
@@ -58,4 +73,20 @@ def profile(request):
 
     }
 
-    return render(request, 'users/profile.html', context)
+    return render(request, 'users/edit_profile.html', context)
+
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('post_list')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'users/change_password.html', {'form': form })

@@ -21,13 +21,21 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.conf.urls import url
+from users import views
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('fb.urls')),
     path('register/', user_views.register, name='register' ),
     path('login/',auth_views.LoginView.as_view(template_name='users/login.html'),name='login'),
     path('logout/',auth_views.LogoutView.as_view(),name='logout'),
-    path('profile/', user_views.profile, name='profile'),
+    path('profile/', user_views.view_profile, name='profile'),
+    path(r'^profile/(?P<pk>\d+)/$', user_views.view_profile, name='view_profile_with_pk'),
+    path('edit_profile/', user_views.edit_profile, name='edit_profile'),
+    url(r'^password/$', views.change_password, name='change_password'),
+
 ]
 
 if settings.DEBUG:

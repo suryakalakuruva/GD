@@ -1,0 +1,396 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>fb</title>
+  <meta charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/facebook.css' %}">
+ <!--  <link type="text/css" rel="stylesheet" href="fb.css" /> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+function showDiv() {
+   document.getElementById('welcomeDiv').style.display = "block";
+   document.getElementById('hide_edit').style.display = "none";
+}
+</script>
+
+
+  <style>    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+.coverpadx{
+left:0px;
+top:0px;
+height:360px;
+width:850px;
+position:relative;}
+
+.profilepicx{width:140px;
+height:140px;
+padding:5px;
+top:220px;
+left:15px;
+position:absolute;}
+.username{left:200px;
+font-size:20px;
+font-family:verdana;
+color:white;
+top:250px;
+height:50px;
+width:200px;
+position:absolute;
+}
+#relative{
+position:relative;
+}
+
+
+
+
+  </style>
+</head>
+<body>
+          <nav class="navbar navbar-default navbar-fixed-top" >
+
+            <div class="container-fluid" style="background-color: #4267b2;">
+                <div class="navbar-header">
+                    <a class="navbar-brand" style="color:white;">facebook</a>
+                </div>
+               
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                      <li ><a href=""  class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" /> &nbsp{{ user.username }}</a></li>
+                       <li ><a href="{% url 'post_list' %}"  class="top-menu" style="color: white;">Home</a></li>
+                      <li><a href="{% url 'logout' %}" class="top-menu" style="color:white;" >logout</a></li>
+
+
+                     {% else %}
+                         <li><a href="{% url 'login' %}" class="top-menu" style="color: white;">login</a></li>
+                         <li><a href="{% url 'register' %}" class="top-menu" style="color: white;">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+    </nav>
+<br>
+<br>
+<br>
+
+ <div class="container">    
+  <div class="row"> 
+<div class="col-md-12 ">
+
+<div class="coverpadx"><img src="{{ user.profile.cover.url }}" height="360px" width="850px"/>
+</div>
+<div class="profilepicx"><img class="img-circle" src="{{ user.profile.image.url }}"height="140px" height="140px"/>
+</div>
+</div>
+
+</div>
+</div>
+
+
+
+
+<div class="container">
+ 
+  <div class="row">
+    <div class="col-md-9">
+      <nav class="navbar navbar-default" id="relative">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#"></a>
+    </div>
+    <ul class="nav navbar-nav ">
+    <li class=><a href="#"><b>{{ user.username }}</b></a></li>
+    <li class=><a href="#"></a></li>
+      <li class=><a href="#"></a></li>
+      
+
+      <li class=><a href="#"></a></li>
+      <li class=><a href="#"></a></li>
+      <li class=><a href="#"></a></li>
+      <li class=><a href="{% url 'profile' %}">Home</a></li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Timeline
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Listview</a></li>
+          <li><a href="#">phots</a></li>
+          <li><a href="#">Friends</a></li>
+        
+        </ul>
+      </li>
+       <li><a href="#">Archive</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Friends</a></li>
+          <li><a href="#">More</a></li>
+      
+    </ul>
+  </div>
+</nav>
+
+
+ 
+<div class="col-md-3"></div>
+</div>
+</div>
+</div>
+<br>
+<br>
+
+
+
+
+
+
+<div class="container">    
+  <div class="row">
+    <div class="col-md-3 well">
+    <div>
+        <h4><a href="#">Intro</a></h4>
+        <p class="text-muted">Add a short bio to tell people more about yourself.</p>
+        <!-- <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar"><br><br> -->
+        <hr size="40">
+
+                 <div  id="welcomeDiv"  style="display:none;" >
+
+              <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <fieldset class="form-group">
+              <legend class="border-bottom">Profile Info</legend>
+              {{ u_form|crispy }}
+              {{ p_form|crispy }}
+          </fieldset>
+          <div class="form-group">
+              <button class="btn btn-success" type="submit">Update</button>
+          </div>
+      </form>
+    </div>
+ 
+        <button class="btn btn-primary"><a style="text-decoration: none;color:white" href="{% url 'change_password' %}">Change password</a></button>
+        <button id="hide_edit" class="btn btn-primary" name="answer" onclick="showDiv()">Edit profile<span class="glyphicon glyphicon-pencil "></span></button><br><br>
+       
+        <p>Profile Name <a href="">{{ user.username }}</a></p><br>
+         <p>Email <a href="">{{ user.email }}</a></p><br>
+          <p>Worked at <a href="">{{ user.profile.worked }}</a></p><br>
+           <p>Studied at <a href="">{{ user.profile.studied }}</a></p><br>
+           <p>company <a href="">{{ user.profile.company }}</a></p><br>
+            <p>Lives in <a href="">{{ user.profile.lives }}</a></p><br>
+             <p>From <a href="">{{ user.profile.froma }}</a></p><br>
+             <hr>
+
+    
+<h4><a>Showcase what's important to you by adding photos, Pages, groups and more to your featured section on your public profile.</a><h4>
+        
+      </div>
+     
+
+
+      <div class="well">
+        <p><a href="#">Interests</a></p>
+        <p>
+          <span class="label label-default">News</span>
+          <span class="label label-primary">W3Schools</span>
+          <span class="label label-success">Labels</span>
+          <span class="label label-info">Football</span>
+          <span class="label label-warning">Gaming</span>
+          <span class="label label-danger">Friends</span>
+        </p>
+        <hr>
+      </div>
+
+
+      <div class="alert alert-success fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <p><strong>Ey!</strong></p>
+        People are looking at your profile. Find out who.
+      </div>
+      <p><a href="#">Link</a></p>
+      <p><a href="#">Link</a></p>
+      <p><a href="#">Link</a></p>
+    </div>
+
+
+<div class="col-md-6">
+
+                    {% if user.is_authenticated %}
+                     <form name="myform" method="POST" action="{% url 'create_post' %}" autocomplete="off">  
+                        {% csrf_token %}
+                        
+                        <input id="post" type="text" name="post"  placeholder="create post!!!" /><br><br>
+                       
+                       
+                       <button style="float: right" type="sumbit" class="btn btn-primary">Post</button>
+                                                                                 
+                               
+                    </form> <br><br>
+                    {% endif %}
+                    
+                     
+                      {% if messages %}
+                       {% for message in messages %}
+                       <div class="alert alert-{{ message.tags }}">
+                           {{ message }}
+                       </div>
+                       {% endfor %}
+                    {% endif %}
+                    {% if user.is_authenticated %}
+    {% for post in posts %}
+    <div class="box">
+      <img class="img-circle" src="{{ post.author.profile.image.url }}""  height="40px" width="45px" >
+      <span style="font-family: 'Lobster', cursive;">{{ post.author }}</span>
+       <small class="date"> at {{ post.created_date }}</small>
+      <hr>
+    <p>{{ post.title }}</p>
+       
+    </div>
+       
+    {% endfor %}
+
+ {% endif %}
+                </div>
+
+
+      <!-- <div class="row"> -->
+     <!--    <div class="col-md-6">
+          <div class="well">
+           <p>{{ user.username }}</p>
+           <img class="img-circle" src="{{ user.profile.image }}"height="55" width="55" alt="phot not avilable"/>
+           <p>  </p>
+          </div> -->
+        <!-- </div> -->
+
+      <!--   <div class="col-md-6"> -->
+        <!--   <div class="well">
+            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
+          </div> -->
+        </div>
+      </div>
+<div class="col-md-3"></div>
+ </div>
+</div>
+
+
+
+<div class="container">
+<div class="row">
+  <div class="col-md-3">
+    <div></div>
+  </div>
+  <div class="col-md-6"></div>
+  <div class="col-md-3"></div>
+ </div>
+</div>
+
+<!-- <div class="container">   
+
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="well">
+           <p>Bo</p>
+           <img src="bandmember.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+          </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="well">
+            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="well">
+           <p>Jane</p>
+           <img src="bandmember.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+          </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="well">
+            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="well">
+           <p>Anja</p>
+           <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+          </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="well">
+            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
+          </div>
+        </div>
+      </div>     
+    </div>
+    <div class="col-sm-2 well">
+      <div class="thumbnail">
+        <p>Upcoming Events:</p>
+        <img src="paris.jpg" alt="Paris" width="400" height="300">
+        <p><strong>Paris</strong></p>
+        <p>Fri. 27 November 2015</p>
+        <button class="btn btn-primary">Info</button>
+      </div>      
+      <div class="well">
+        <p>ADS</p>
+      </div>
+      <div class="well">
+        <p>ADS</p>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div class="chat-sidebarx">
+</div>
+<div class="chat-sidebar">
+<div id="chatnamebox" class="chat-sidebar">mahesh</div>
+<div id="chatnamebox1" class="chat-sidebar">raju</div>
+<div id="chatnamebox2" class="chat-sidebar">ram</div>
+<div id="chatnamebox3" class="chat-sidebar">goutham</div>
+<div id="chatnamebox4" class="chat-sidebar">gvk</div>
+<div id="chatnamebox5" class="chat-sidebar">dhanush</div>
+<div id="chatnamebox6" class="chat-sidebar">anji</div>
+<div id="chatnameboxp1" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp2" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp3" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp4" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp5" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp6" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp7" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+</div>
+
+
+
+<!-- <footer class="container-fluid text-center">
+  <p>Footer Text</p>
+</footer>
+ -->
+<!-- 
+        {% if user.is_authenticated %}
+
+
+       {% else %}
+        <div class="footer">
+          <span>facebook</span>
+        </div>
+       {% endif %} -->
+    </body>
+
+</body>
+</html>
