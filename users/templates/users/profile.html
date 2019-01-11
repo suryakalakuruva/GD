@@ -3,7 +3,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>fb</title>
+  <link rel="icon"  href="/static/css/fb1.png" type="image/gif" sizes="16x16">
+  <title>facebook</title>
   <meta charset="utf-8">
 <link rel="stylesheet" href="{% static 'css/facebook.css' %}">
  <!--  <link type="text/css" rel="stylesheet" href="fb.css" /> -->
@@ -61,6 +62,18 @@ position:relative;
 
 
   </style>
+
+
+   <script type="text/javascript">
+         function showcomments(value){
+          $(".comment"+value).toggle()
+         }
+
+         function upload() {
+         $("#upload").show()
+        }
+       </script>
+        
 </head>
 <body>
           <nav class="navbar navbar-default navbar-fixed-top" >
@@ -72,7 +85,7 @@ position:relative;
                
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                      <li ><a href=""  class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" /> &nbsp{{ user.username }}</a></li>
+                      <li ><a href=""  class="top-menu" style="color: white;"><img class="img-circle" src="{{ request.user.profile.image.url }}" height="30px" width="35px" /> &nbsp{{ request.user }}</a></li>
                        <li ><a href="{% url 'post_list' %}"  class="top-menu" style="color: white;">Home</a></li>
                       <li><a href="{% url 'logout' %}" class="top-menu" style="color:white;" >logout</a></li>
 
@@ -122,7 +135,7 @@ position:relative;
       <li class=><a href="#"></a></li>
       <li class=><a href="#"></a></li>
       <li class=><a href="#"></a></li>
-      <li class=><a href="{% url 'profile' %}">Home</a></li>
+      <li class=><a href="">Home</a></li>
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Timeline
         <span class="caret"></span></a>
@@ -179,21 +192,24 @@ position:relative;
           </div>
       </form>
     </div>
- 
-       {% if request.user %}
-        <button id="hide_edit" class="btn btn-primary" name="answer" onclick="showDiv()">Edit profile<span class="glyphicon glyphicon-pencil "></span></button><br><br>
-        {{request.user}}
-        {{user.username}}
-        {% endif %}
-        <p>Profile Name <a href="">{{ user.username }}</a></p><br>
-         <p>Email <a href="">{{ user.email }}</a></p><br>
-          <p>Worked at <a href="">{{ user.profile.worked }}</a></p><br>
-           <p>Studied at <a href="">{{ user.profile.studied }}</a></p><br>
-           <p>company <a href="">{{ user.profile.company }}</a></p><br>
-            <p>Lives in <a href="">{{ user.profile.lives }}</a></p><br>
-             <p>From <a href="">{{ user.profile.froma }}</a></p><br>
-             <hr>
 
+        
+        {% if friend.user.is %}
+        <button id="hide_edit" class="btn btn-primary" name="answer" ><a href="">Edit profile</a><span class="glyphicon glyphicon-pencil "></span></a></button><br><br>
+        {{request.user}}
+          {{user.username}}   
+          {% endif %}
+
+        <p><span class="glyphicon glyphicon-user"></span> Profile Name <a href="">{{ user.username }}</a></p><br>
+      
+         <p><span class="glyphicon glyphicon-envelope"></span> Email <a href="">{{ user.email }}</a></p><br>
+          <p><span class="glyphicon glyphicon-briefcase"></span> Worked at <a href="">{{ user.profile.worked }}</a></p><br>
+           <p><span class="glyphicon glyphicon-education"></span> Studied at <a href="">{{ user.profile.studied }}</a></p><br>
+           <p><span class="glyphicon glyphicon-briefcase"></span> company <a href="">{{ user.profile.company }}</a></p><br>
+            <p><span class="glyphicon glyphicon-home"></span> Lives in <a href="">{{ user.profile.lives }}</a></p><br>
+             <p><span class="glyphicon glyphicon-map-marker"></span> From <a href="">{{ user.profile.Home}}</a></p><br>
+             <hr>
+             
     
 <h4><a>Showcase what's important to you by adding photos, Pages, groups and more to your featured section on your public profile.</a><h4>
         
@@ -227,19 +243,18 @@ position:relative;
 
 
 <div class="col-md-6">
-
+<!-- 
                     {% if user.is_authenticated %}
-                     <form name="myform" method="POST" action="{% url 'create_post' %}" autocomplete="off">  
+                     <form name="myform" method="POST" action="{% url 'create_post' %}" autocomplete="off" enctype="multipart/form-data">  
                         {% csrf_token %}
-                        
-                        <input id="post" type="text" name="post"  placeholder="create post!!!" /><br><br>
-                       
-                       
-                       <button style="float: right" type="sumbit" class="btn btn-primary">Post</button>
-                                                                                 
-                               
-                    </form> <br><br>
-                    {% endif %}
+                       <input id="post"  type="text" name="post"  placeholder="  write something here !!!" /><br><br>
+                        <label><span class="glyphicon glyphicon-picture" style="font-size: xx-large;color: grey; " onclick="upload()"></span><input type="file" name="myfile" id = "upload" style="display: none;"></label>
+                       <button style = "float: right;" class="btn btn-primary">post</button>
+                      
+                    </form> 
+
+                    <br><br>
+                    {% endif %} -->
                     
                      
                       {% if messages %}
@@ -250,15 +265,49 @@ position:relative;
                        {% endfor %}
                     {% endif %}
                     {% if user.is_authenticated %}
-    {% for post in posts %}
-    <div class="box">
-      <img class="img-circle" src="{{ post.author.profile.image.url }}""  height="40px" width="45px" >
-      <span style="font-family: 'Lobster', cursive;">{{ post.author }}</span>
-       <small class="date"> at {{ post.created_date }}</small>
-      <hr>
-    <p>{{ post.title }}</p>
-       
-    </div>
+       {% for post in posts %}
+              <div class="box">
+                   <h3 style="font-family: 'Lobster', cursive;"><img class="img-circle" src="{{ post.author.profile.image.url }}" height="30px" width="35px" />
+                   &nbsp{{ post.author }}</h3>
+                   <small class="date"> at {{ post.created_date }}</small><hr>
+                   <p>{{ post.title }}</p>
+                   {% if post.post_pics %}
+
+                     <img src="/media/{{ post.post_pics }}" style="width:-webkit-fill-available;" />
+
+                   {% endif %}
+
+                   <hr>
+                    <p style="font-size: 18px;padding-left: 12px"><span class="glyphicon glyphicon-thumbs-up" style="padding-left: 12px"></span>
+                    <label><span style="padding-left: 140px" onclick="showcomments({{post.pk}})" >comments : {{post.comments.count}}</span></label>
+                    <span class="glyphicon glyphicon-share-alt" style="padding-left: 140px">share</span></p>
+
+              </div>
+              <div class="comment{{post.pk}}" style=" display: none;">
+           <div class="commentbox" >
+            {% for comment in post.comments.all %}
+                 
+                  <div class="comment">
+                    <small class="date">{{ comment.created_date }}</small>
+                    <p>comment by : <strong>{{ comment.author }}</strong></p>
+                    
+                    <p>{{ comment.text|linebreaks }}</p>
+                  </div>
+                   
+          {% empty %}
+                <p>No comments here yet :(</p>
+          {% endfor %}
+          
+          <form name="myform" method="POST" action="{% url 'create_comment'  pk=post.pk %}" autocomplete="off" enctype="multipart/form-data">  
+                        {% csrf_token %}
+                       <input id="post"  type="text" name="comment"  placeholder="  write comments here !!!" /><br><br>
+                     
+                       <button style = "float: right;" class="btn btn-primary">comment</button>
+                      
+                    </form> 
+        </div>
+      </div>
+      <br>
        
     {% endfor %}
 
@@ -266,19 +315,7 @@ position:relative;
                 </div>
 
 
-      <!-- <div class="row"> -->
-     <!--    <div class="col-md-6">
-          <div class="well">
-           <p>{{ user.username }}</p>
-           <img class="img-circle" src="{{ user.profile.image }}"height="55" width="55" alt="phot not avilable"/>
-           <p>  </p>
-          </div> -->
-        <!-- </div> -->
-
-      <!--   <div class="col-md-6"> -->
-        <!--   <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
-          </div> -->
+    
         </div>
       </div>
 <div class="col-md-3"></div>
@@ -297,65 +334,7 @@ position:relative;
  </div>
 </div>
 
-<!-- <div class="container">   
 
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p>Bo</p>
-           <img src="bandmember.jpg" class="img-circle" height="55" width="55" alt="Avatar">
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p>Jane</p>
-           <img src="bandmember.jpg" class="img-circle" height="55" width="55" alt="Avatar">
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p>Anja</p>
-           <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
-          </div>
-        </div>
-      </div>     
-    </div>
-    <div class="col-sm-2 well">
-      <div class="thumbnail">
-        <p>Upcoming Events:</p>
-        <img src="paris.jpg" alt="Paris" width="400" height="300">
-        <p><strong>Paris</strong></p>
-        <p>Fri. 27 November 2015</p>
-        <button class="btn btn-primary">Info</button>
-      </div>      
-      <div class="well">
-        <p>ADS</p>
-      </div>
-      <div class="well">
-        <p>ADS</p>
-      </div>
-    </div>
-  </div>
-</div> -->
 
 
 <div class="chat-sidebarx">
@@ -379,19 +358,6 @@ position:relative;
 
 
 
-<!-- <footer class="container-fluid text-center">
-  <p>Footer Text</p>
-</footer>
- -->
-<!-- 
-        {% if user.is_authenticated %}
-
-
-       {% else %}
-        <div class="footer">
-          <span>facebook</span>
-        </div>
-       {% endif %} -->
     </body>
 
 </body>

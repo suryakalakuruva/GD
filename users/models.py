@@ -11,7 +11,7 @@ class Profile(models.Model):
 	studied = models.CharField(max_length=200,blank=True,null=True)
 	company = models.CharField(max_length=200,blank=True,null=True)
 	lives = models.CharField(max_length=200,blank=True,null=True)
-	froma = models.CharField(max_length=200,blank=True,null=True)
+	Home = models.CharField(max_length=200,blank=True,null=True)
 	created_date = models.DateTimeField(default=timezone.now)
 
 	def __str__(self):

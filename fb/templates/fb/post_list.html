@@ -3,21 +3,30 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>fb</title>
+        <link rel="icon"  href="/static/css/fb1.png" type="image/gif" sizes="16x16">
+        <title>facebook</title>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="{% static 'css/fb.css' %}">
-
+        
+        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+        <script src="{% static 'js/infinite.min.js' %}"></script>
           
 
      
        <script type="text/javascript">
-         function showcomments(value){
+        function showcomments(value){
           $(".comment"+value).toggle()
          }
+
+        function upload() {
+         $("#upload").show()
+        }
        </script>
+      
         
     </head>
     <body>
@@ -30,7 +39,10 @@
                
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                      <li><a href="{% url 'profile' %}"class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" />&nbsp{{ user.username }}</a></li>
+
+                    
+                      <li ><a href="{% url 'profile' %}"class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" />&nbsp{{ user.username }}</a></li>
+                       <li><a href="{% url 'edit_profile' %}" class="top-menu" style="color:white;" >Edit profile</a></li>
 
                       <li><a href="{% url 'logout' %}" class="top-menu" style="color:white;" >logout</a></li>
 
@@ -51,13 +63,13 @@
                
                    <h4>{{ user.username }}</h4>
                     <ul class="nav nav-pills nav-stacked">
-                     <li class="active"><a href="#section1">Home</a></li>
+                     <li class="active"><a href="">Home</a></li>
                      <li><a href="#section2">Messanger</a></li>
                      <li><a href="#section3">Friends</a></li>
                      <li><a href="#section3">Photos</a></li>
                       
                       <h5>shortcuts</h5>
-                      <li class=""><a href="#section1">Helath and inspriational videos</a></li>
+                      <li class=""><a href="">Helath and inspriational videos</a></li>
                      <li><a href="#section2">Messanger</a></li>
                      <li><a href="#section3">Friends</a></li>
                      <li><a href="#section3">Photos</a></li>
@@ -72,7 +84,7 @@
                      <form name="myform" method="POST" action="{% url 'create_post' %}" autocomplete="off" enctype="multipart/form-data">  
                         {% csrf_token %}
                        <input id="post"  type="text" name="post"  placeholder="  write something here !!!" /><br><br>
-                        <label><input type="file" name="myfile" style="display: none;"><span class="glyphicon glyphicon-camera" style="font-size: xx-large;color: grey; "></span></label>
+                        <label><span class="glyphicon glyphicon-picture" style="font-size: xx-large;color: grey; " onclick="upload()"></span><input type="file" name="myfile" id = "upload" style="display: none;"></label>
                        <button style = "float: right;" class="btn btn-primary">post</button>
                       
                     </form> 
@@ -87,8 +99,14 @@
                        </div>
                        {% endfor %}
                     {% endif %}
-                    {% if user.is_authenticated %}
+                 
+
+
+
+
+ <div class="infinite-container">
     {% for post in posts %}
+     <div class="infinite-item">
               <div class="box">
                    <h3 style="font-family: 'Lobster', cursive;"><img class="img-circle" src="{{ post.author.profile.image.url }}" height="30px" width="35px" />
                    &nbsp{{ post.author }}</h3>
@@ -99,13 +117,11 @@
                      <img src="/media/{{ post.post_pics }}" style="width:-webkit-fill-available;" />
 
                    {% endif %}
-                
 
                    <hr>
                     <p style="font-size: 18px;padding-left: 12px"><span class="glyphicon glyphicon-thumbs-up" style="padding-left: 12px"></span>
                     <label><span style="padding-left: 140px" onclick="showcomments({{post.pk}})" >comments : {{post.comments.count}}</span></label>
                     <span class="glyphicon glyphicon-share-alt" style="padding-left: 140px">share</span></p>
-
 
               </div>
               <div class="comment{{post.pk}}" style=" display: none;">
@@ -122,7 +138,7 @@
           {% empty %}
                 <p>No comments here yet :(</p>
           {% endfor %}
-          <!-- <a class="btn btn-default" href="">Add comment</a> -->
+          
           <form name="myform" method="POST" action="{% url 'create_comment'  pk=post.pk %}" autocomplete="off" enctype="multipart/form-data">  
                         {% csrf_token %}
                        <input id="post"  type="text" name="comment"  placeholder="  write comments here !!!" /><br><br>
@@ -134,14 +150,38 @@
          </div>
 
        <br>
+     </div>
     {% endfor %}
+  </div>
+
+   {% if posts.has_next %}
+    <a class="infinite-more-link" href="?page={{ posts.next_page_number }}">More</a>
+  {% endif %}
+
+
+   <div class="loading" style="display: none;">
+    Loading...
+  </div>
+
+  <script>
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
+
     
 
- {% endif %}
                 </div>
                 <div class="col-md-3">
                   {% if user.is_authenticated %}
                     <div class="well">
+
                       <h2>Add Friends</h2>
                    
                       {% for user in users %}
@@ -158,9 +198,10 @@
                     {% endfor %}
                     <h2>Friends list</h2>
                      {% for friend in friends %}
-                    <a href="{% url 'view_profile_with_pk'  pk=friend.pk %}"><h4> <img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" />&nbsp{{friend.username}}  <a href="{% url 'change_friends' operation='remove' pk=friend.pk %}">
+                    <a href="{% url 'view_profile_with_pk'  pk=friend.pk %}"><h4> <img class="img-circle" src="{{ friend.profile.image.url }}" height="30px" width="35px" />&nbsp{{friend.username}}  <a href="{% url 'change_friends' operation='remove' pk=friend.pk %}">
                        <button type="button" class="btn btn-default  btn-xs">Remove Friend</button>
                     </a> </h4></a>
+
                     
                    
                     {% endfor %}

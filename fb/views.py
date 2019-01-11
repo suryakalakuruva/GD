@@ -3,25 +3,31 @@ from .models import Post,Comment,Friend
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
 def post_list(request):
-	posts = Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
+	posts_list = Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
+	page = request.GET.get('page', 1)
+	paginator = Paginator(posts_list, 5)
+	try:
+		posts = paginator.page(page)
+	except PageNotAnInteger:
+		posts = paginator.page(1)
+	except EmptyPage:
+		posts = paginator.page(paginator.num_pages)
+
+
+	# import ipdb;
+	# ipdb.set_trace();
+
 	users = User.objects.exclude(id=request.user.id)
 	friend = Friend.objects.get(current_user=request.user)
 	friends = friend.users.all()
-	# posts = []
-	# for friend in friends:
-	# 	posts = Post.objects.filter(author=friend).order_by('-created_date')
-	# 	posts.append(post)
-	# posts = Post.objects.filter(author=friends[0]).order_by('-created_date')
-	# if posts=='':
-	# 	posts == Post.objectsfilter(created_date__lte=timezone.now()).order_by('-created_date')
-	# import ipdb;
-
-	# ipdb.set_trace();
+	
 	return render(request, 'fb/post_list.html', {'posts': posts,'users':users,'friends':friends})
+
 
 
 

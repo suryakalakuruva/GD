@@ -1,0 +1,364 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon"  href="/static/css/fb1.png" type="image/gif" sizes="16x16">
+  <title>facebook</title>
+  <meta charset="utf-8">
+<link rel="stylesheet" href="{% static 'css/facebook.css' %}">
+ <!--  <link type="text/css" rel="stylesheet" href="fb.css" /> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+function showDiv() {
+   document.getElementById('welcomeDiv').style.display = "block";
+   document.getElementById('hide_edit').style.display = "none";
+}
+</script>
+
+
+  <style>    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+.coverpadx{
+left:0px;
+top:0px;
+height:360px;
+width:850px;
+position:relative;}
+
+.profilepicx{width:140px;
+height:140px;
+padding:5px;
+top:220px;
+left:15px;
+position:absolute;}
+.username{left:200px;
+font-size:20px;
+font-family:verdana;
+color:white;
+top:250px;
+height:50px;
+width:200px;
+position:absolute;
+}
+#relative{
+position:relative;
+}
+
+
+/*.symbol{
+  background-image: url()
+}*/
+
+  </style>
+
+     <script type="text/javascript">
+        function showcomments(value){
+          $(".comment"+value).toggle()
+         }
+
+
+        function upload() {
+         $("#upload").show()
+        }
+
+       </script>
+
+</head>
+<body>
+          <nav class="navbar navbar-default navbar-fixed-top" >
+
+            <div class="container-fluid" style="background-color: #4267b2;">
+                <div class="navbar-header">
+                    <a class="navbar-brand" style="color:white;">facebook</a>
+                </div>
+               
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                      <li ><a href=""  class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" /> &nbsp{{ user.username }}</a></li>
+                       <li ><a href="{% url 'post_list' %}"  class="top-menu" style="color: white;">Home</a></li>
+                      <li><a href="{% url 'logout' %}" class="top-menu" style="color:white;" >logout</a></li>
+
+
+                     {% else %}
+                         <li><a href="{% url 'login' %}" class="top-menu" style="color: white;">login</a></li>
+                         <li><a href="{% url 'register' %}" class="top-menu" style="color: white;">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+    </nav>
+<br>
+<br>
+<br>
+
+ <div class="container">    
+  <div class="row"> 
+<div class="col-md-12 ">
+
+<div class="coverpadx"><img src="{{ user.profile.cover.url }}" height="360px" width="850px"/>
+</div>
+<div class="profilepicx"><img class="img-circle" src="{{ user.profile.image.url }}"height="140px" height="140px"/>
+</div>
+</div>
+
+</div>
+</div>
+
+
+
+
+<div class="container">
+ 
+  <div class="row">
+    <div class="col-md-9">
+      <nav class="navbar navbar-default" id="relative">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#"></a>
+    </div>
+    <ul class="nav navbar-nav ">
+    <li class=><a href="#"><b>{{ user.username }}</b></a></li>
+    <li class=><a href="#"></a></li>
+      <li class=><a href="#"></a></li>
+      
+
+      <li class=><a href="#"></a></li>
+      <li class=><a href="#"></a></li>
+      <li class=><a href="#"></a></li>
+      <li class=><a href="">Home</a></li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Timeline
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Listview</a></li>
+          <li><a href="#">phots</a></li>
+          <li><a href="#">Friends</a></li>
+        
+        </ul>
+      </li>
+       <li><a href="#">Archive</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Friends</a></li>
+          <li><a href="#">More</a></li>
+      
+    </ul>
+  </div>
+</nav>
+
+
+ 
+<div class="col-md-3"></div>
+</div>
+</div>
+</div>
+<br>
+<br>
+
+
+
+
+
+
+<div class="container">    
+  <div class="row">
+    <div class="col-md-3 well">
+    <div>
+        <h4><a href="#">Intro</a></h4>
+        <p class="text-muted">Add a short bio to tell people more about yourself.</p>
+        <!-- <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar"><br><br> -->
+        <hr size="40">
+
+                 <div  id="welcomeDiv"  style="display:none;" >
+
+              <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <fieldset class="form-group">
+              <legend class="border-bottom">Profile Info</legend>
+             
+              {{ p_form|crispy }}
+          </fieldset>
+          <div class="form-group">
+              <button class="btn btn-success" type="submit">Update</button>
+          </div>
+      </form>
+    </div>
+ 
+        <button class="btn btn-primary"><a style="text-decoration: none;color:white" href="{% url 'change_password' %}">Change password</a></button>
+        <button id="hide_edit" class="btn btn-primary" name="answer" onclick="showDiv()">Edit profile<span class="glyphicon glyphicon-pencil "></span></button><br><br>
+       
+        <p><span class="glyphicon glyphicon-user"></span> Profile Name <a href="">{{ user.username }}</a></p><br>
+         <p><span class="glyphicon glyphicon-envelope"></span> Email <a href="">{{ user.email }}</a></p><br>
+          <p><span class="glyphicon glyphicon-briefcase"></span> Worked at <a href="">{{ user.profile.worked }}</a></p><br>
+           <p><span class="glyphicon glyphicon-education"></span> Studied at <a href="">{{ user.profile.studied }}</a></p><br>
+           <p><span class="glyphicon glyphicon-briefcase"></span> company <a href="">{{ user.profile.company }}</a></p><br>
+            <p><span class="glyphicon glyphicon-home"></span> Lives in <a href="">{{ user.profile.lives }}</a></p><br>
+             <p><span class="glyphicon glyphicon-map-marker"></span> From <a href="">{{ user.profile.Home }}</a></p><br>
+             <hr>
+
+    
+<h4><a>Showcase what's important to you by adding photos, Pages, groups and more to your featured section on your public profile.</a><h4>
+        
+      </div>
+     
+
+
+      <div class="well">
+        <p><a href="#">Interests</a></p>
+        <p>
+          <span class="label label-default">News</span>
+          <span class="label label-primary">W3Schools</span>
+          <span class="label label-success">Labels</span>
+          <span class="label label-info">Football</span>
+          <span class="label label-warning">Gaming</span>
+          <span class="label label-danger">Friends</span>
+        </p>
+        <hr>
+      </div>
+
+
+      <div class="alert alert-success fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+        <p><strong>Ey!</strong></p>
+        People are looking at your profile. Find out who.
+      </div>
+      <p><a href="#">Link</a></p>
+      <p><a href="#">Link</a></p>
+      <p><a href="#">Link</a></p>
+    </div>
+
+
+<div class="col-md-6">
+
+                  <!--   {% if user.is_authenticated %}
+                    <form name="myform" method="POST" action="{% url 'create_post' %}" autocomplete="off" enctype="multipart/form-data">  
+                        {% csrf_token %}
+                       <input id="post" class='symbol' type="text" name="post"  placeholder=" write something here !!!" /><br><br>
+                        <label><span class="glyphicon glyphicon-picture" style="font-size: xx-large;color: grey; " onclick="upload()"></span><input type="file" name="myfile" id = "upload" style="display: none;"></label>
+                       <button style = "float: right;" class="btn btn-primary">post</button>
+                      
+                    </form> 
+
+                    <br><br>
+                    {% endif %} -->
+                    
+                     
+                      {% if messages %}
+                       {% for message in messages %}
+                       <div class="alert alert-{{ message.tags }}">
+                           {{ message }}
+                       </div>
+                       {% endfor %}
+                    {% endif %}
+                    {% if user.is_authenticated %}
+        {% for post in posts %}
+              <div class="box">
+                   <h3 style="font-family: 'Lobster', cursive;"><img class="img-circle" src="{{ post.author.profile.image.url }}" height="30px" width="35px" />
+                   &nbsp{{ post.author }}</h3>
+                   <small class="date"> at {{ post.created_date }}</small><hr>
+                   <p>{{ post.title }}</p>
+                   {% if post.post_pics %}
+
+                     <img src="/media/{{ post.post_pics }}" style="width:-webkit-fill-available;" />
+
+                   {% endif %}
+
+                   <hr>
+                    <p style="font-size: 18px;padding-left: 12px"><span class="glyphicon glyphicon-thumbs-up" style="padding-left: 12px"></span>
+                    <label><span style="padding-left: 140px" onclick="showcomments({{post.pk}})" >comments : {{post.comments.count}}</span></label>
+                    <span class="glyphicon glyphicon-share-alt" style="padding-left: 140px">share</span></p>
+
+              </div>
+              <div class="comment{{post.pk}}" style=" display: none;">
+           <div class="commentbox" >
+            {% for comment in post.comments.all %}
+                 
+                  <div class="comment">
+                    <small class="date">{{ comment.created_date }}</small>
+                    <p>comment by : <strong>{{ comment.author }}</strong></p>
+                    
+                    <p>{{ comment.text|linebreaks }}</p>
+                  </div>
+                   
+          {% empty %}
+                <p>No comments here yet :(</p>
+          {% endfor %}
+          
+          <form name="myform" method="POST" action="{% url 'create_comment'  pk=post.pk %}" autocomplete="off" enctype="multipart/form-data">  
+                        {% csrf_token %}
+                       <input id="post"  type="text" name="comment"  placeholder="  write comments here !!!" /><br><br>
+                     
+                       <button style = "float: right;" class="btn btn-primary">comment</button>
+                      
+                    </form> 
+        </div>
+      </div>
+      <br>
+       
+
+       
+    {% endfor %}
+
+ {% endif %}
+                </div>
+
+
+   
+        </div>
+      </div>
+<div class="col-md-3"></div>
+ </div>
+</div>
+
+
+
+<div class="container">
+<div class="row">
+  <div class="col-md-3">
+    <div></div>
+  </div>
+  <div class="col-md-6"></div>
+  <div class="col-md-3"></div>
+ </div>
+</div>
+
+
+
+
+<div class="chat-sidebarx">
+</div>
+<div class="chat-sidebar">
+<div id="chatnamebox" class="chat-sidebar">mahesh</div>
+<div id="chatnamebox1" class="chat-sidebar">raju</div>
+<div id="chatnamebox2" class="chat-sidebar">ram</div>
+<div id="chatnamebox3" class="chat-sidebar">goutham</div>
+<div id="chatnamebox4" class="chat-sidebar">gvk</div>
+<div id="chatnamebox5" class="chat-sidebar">dhanush</div>
+<div id="chatnamebox6" class="chat-sidebar">anji</div>
+<div id="chatnameboxp1" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp2" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp3" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp4" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp5" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp6" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+<div id="chatnameboxp7" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
+</div>
+
+
+
+    </body>
+
+</body>
+</html>

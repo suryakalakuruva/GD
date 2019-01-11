@@ -72,12 +72,33 @@ border-radius: 15px;
 }
 
 
+
 .box {
   background: #ffffff;
   padding: 10px 20px;
   border: 1px solid #dddddd;
+  border-radius: 5px;
+/*  margin-bottom: 20px;
+ box-shadow: 10px 3px 5px grey;*/
+}
+
+.commentbox {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+ /* box-shadow: 10px 3px 5px grey;*/
+}
+.comment {
+ 
+  /*background: #ffffff;*/
+  background: whitesmoke;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
   border-radius: 3px;
   margin-bottom: 20px;
+  box-shadow: 5px 3px 5px grey;
 }
 
 .footer{
