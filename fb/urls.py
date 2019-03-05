@@ -9,4 +9,10 @@ urlpatterns = [
     # path('post/<int:pk>/comment/', views.add_comment_to_post, name='add_comment_to_post'),
     path('post/<int:pk>/comment/',views.create_comment,name='create_comment'),
     path(r'^connect/(?P<operation>.+)/(?P<pk>\d+)/$', views.change_friends, name='change_friends'),
+
+    path('api/', views.PostList.as_view()),
+    path('api/<int:pk>/', views.PostDetail.as_view()),
+    path('api/comment/', views.CommentList.as_view()),
+    path('api/comment/<int:pk>/', views.CommentDetail.as_view()),
+
 ]

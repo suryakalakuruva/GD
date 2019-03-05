@@ -8,11 +8,15 @@ from  fb.models import Post,Friend
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
+from rest_framework import generics
+from .serializers import ProfileSerializer
+
+
 # Create your views here.
 
 
 
-
+# View to sign up
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -37,7 +41,7 @@ def register(request):
 
 
 
-
+# View for Profile page
 def view_profile(request, pk=None):
     if pk:
         user = User.objects.get(pk=pk)
@@ -47,6 +51,8 @@ def view_profile(request, pk=None):
     args = {'user': user,'posts':posts}
     return render(request, 'users/profile.html', args)
 
+
+# View for  Edit Profile
 
 @login_required
 def edit_profile(request):
@@ -77,6 +83,7 @@ def edit_profile(request):
 
 
 
+# View for change password
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -90,3 +97,14 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'users/change_password.html', {'form': form })
+
+
+
+class ProfileList(generics.ListAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+
+class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer

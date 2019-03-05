@@ -1,4 +1,4 @@
-{% load static %}
+  {% load static %}
 <html>
     <head>
         <meta charset="utf-8">
@@ -30,6 +30,7 @@
         
     </head>
     <body>
+      <!-- navbar starts -->
         <nav class="navbar navbar-default" >
 
             <div class="container-fluid" style="background-color: #4267b2;">
@@ -79,6 +80,7 @@
                 </div>
                 
                 <div class="col-md-6">
+                  <!-- HTML  form to create new post -->
 
                     {% if user.is_authenticated %}
                      <form name="myform" method="POST" action="{% url 'create_post' %}" autocomplete="off" enctype="multipart/form-data">  
@@ -105,6 +107,7 @@
 
 
  <div class="infinite-container">
+  <!-- for loop to displays posts -->
     {% for post in posts %}
      <div class="infinite-item">
               <div class="box">
@@ -119,13 +122,19 @@
                    {% endif %}
 
                    <hr>
-                    <p style="font-size: 18px;padding-left: 12px"><span class="glyphicon glyphicon-thumbs-up" style="padding-left: 12px"></span>
-                    <label><span style="padding-left: 140px" onclick="showcomments({{post.pk}})" >comments : {{post.comments.count}}</span></label>
-                    <span class="glyphicon glyphicon-share-alt" style="padding-left: 140px">share</span></p>
+                   <div class="row">
+                    <div class="col-xs-3 col-md-4"><p style="font-size: 18px;"><span class="glyphicon glyphicon-thumbs-up"></span></div>
+                    <div class="col-xs-5 col-md-5"><label><span onclick="showcomments({{post.pk}})" >comments : {{post.comments.count}}</span></label></div>
+                    <div class="col-xs-4 col-md-3"><span class="glyphicon glyphicon-share-alt">share</span></p></div>   
+                    </div>
+                    
+                    
 
               </div>
               <div class="comment{{post.pk}}" style=" display: none;">
            <div class="commentbox" >
+
+            <!-- for loop to display comments -->
             {% for comment in post.comments.all %}
                  
                   <div class="comment">
@@ -139,6 +148,7 @@
                 <p>No comments here yet :(</p>
           {% endfor %}
           
+          <!-- HTML form to write comments to posts -->
           <form name="myform" method="POST" action="{% url 'create_comment'  pk=post.pk %}" autocomplete="off" enctype="multipart/form-data">  
                         {% csrf_token %}
                        <input id="post"  type="text" name="comment"  placeholder="  write comments here !!!" /><br><br>
@@ -162,7 +172,7 @@
    <div class="loading" style="display: none;">
     Loading...
   </div>
-
+<!-- JS for Paginations -->
   <script>
     var infinite = new Waypoint.Infinite({
       element: $('.infinite-container')[0],

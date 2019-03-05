@@ -34,6 +34,9 @@ urlpatterns = [
     path(r'^profile/(?P<pk>\d+)/$', user_views.view_profile, name='view_profile_with_pk'),
     path('edit_profile/', user_views.edit_profile, name='edit_profile'),
     url(r'^password/$', user_views.change_password, name='change_password'),
+    path('api/profile/', user_views.ProfileList.as_view()),
+    path('api/profile/<int:pk>/', user_views.ProfileDetail.as_view()),
+
 
 ]
 

@@ -4,9 +4,13 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from rest_framework import generics
+from .serializers import PostSerializer,CommentSerializer
 
 # Create your views here.
 
+
+# To display all posts  
 def post_list(request):
 	posts_list = Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
 	page = request.GET.get('page', 1)
@@ -29,12 +33,13 @@ def post_list(request):
 	return render(request, 'fb/post_list.html', {'posts': posts,'users':users,'friends':friends})
 
 
-
+# View for start page
 
 def start(request):
 	return render(request,'fb/start.html',{})
 
 
+# View for crreating new post
 
 def create_post(request):
 	me=request.user
@@ -68,6 +73,7 @@ def create_post(request):
 
 
 
+# View to add comment to post
 
 def create_comment(request,pk):
 	post = get_object_or_404(Post,pk=pk)
@@ -81,6 +87,7 @@ def create_comment(request,pk):
 		return redirect('post_list')
 
 
+# View to add friends 
 def change_friends(request, operation, pk):
     friend = User.objects.get(pk=pk)
     if operation == 'add':
@@ -89,4 +96,24 @@ def change_friends(request, operation, pk):
         Friend.lose_friend(request.user, friend)
     return redirect('post_list')	
 
+
+# View for REST api to display all posts in JSON
+class PostList(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+# View for REST api to display particular post details
+class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+# View for REST api to  display  all comments 
+class CommentList(generics.ListAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+# View for REST api to display particular comment details
+class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
