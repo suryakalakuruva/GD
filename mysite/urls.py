@@ -22,6 +22,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.conf.urls import url
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'profile', user_views.ProfileList)
 
 
 urlpatterns = [
@@ -36,6 +40,8 @@ urlpatterns = [
     url(r'^password/$', user_views.change_password, name='change_password'),
     path('api/profile/', user_views.ProfileList.as_view()),
     path('api/profile/<int:pk>/', user_views.ProfileDetail.as_view()),
+    # path('profiles/', user_views.ProfileList.as_view()),
+    # path('profiles/<int:pk>/', user_views.ProfileDetail.as_view()),
 
 
 ]

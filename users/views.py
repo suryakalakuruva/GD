@@ -57,23 +57,23 @@ def view_profile(request, pk=None):
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=request.user)
+        # u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST,
                                    request.FILES,
                                    instance=request.user.profile)
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
+        if p_form.is_valid():
+            # u_form.save()
             p_form.save()
             #messages.success(request, 'Your account has been updated!')
             return redirect('edit_profile')
 
     else:
-        u_form = UserUpdateForm(instance=request.user)
+        # u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
     posts = Post.objects.filter(author=request.user).order_by('-created_date')
 
     context = {
-        'u_form': u_form,
+        # 'u_form': u_form,
         'p_form': p_form,
         'posts':posts
 

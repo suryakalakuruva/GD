@@ -1,18 +1,25 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Post,Comment,Friend
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from rest_framework import generics
+from rest_framework import generics,viewsets
+
 from .serializers import PostSerializer,CommentSerializer
 
 # Create your views here.
 
 
 # To display all posts  
+@login_required
 def post_list(request):
-	posts_list = Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
+	users = User.objects.exclude(id=request.user.id)
+	friend = Friend.objects.get(current_user=request.user)
+	friends = friend.users.all()
+	posts_list = Post.objects.filter(Q(author__in = friends) | Q(author = request.user )).order_by('-created_date')
+	# posts_list = Post.objects.filter(created_date__lte=timezone.now()).order_by('-created_date')
 	page = request.GET.get('page', 1)
 	paginator = Paginator(posts_list, 5)
 	try:
@@ -26,9 +33,9 @@ def post_list(request):
 	# import ipdb;
 	# ipdb.set_trace();
 
-	users = User.objects.exclude(id=request.user.id)
-	friend = Friend.objects.get(current_user=request.user)
-	friends = friend.users.all()
+	# users = User.objects.exclude(id=request.user.id)
+	# friend = Friend.objects.get(current_user=request.user)
+	# friends = friend.users.all()
 	
 	return render(request, 'fb/post_list.html', {'posts': posts,'users':users,'friends':friends})
 
@@ -46,7 +53,7 @@ def create_post(request):
 	if request.method == 'POST':
 		posttext = request.POST.get('post')
 		postimage=request.FILES.get('myfile')
-		if (posttext != ""):
+		if (posttext or postimage):
 			post = Post.objects.create(author=me,title=posttext,post_pics=postimage)
 
 		# if (postdetail != ""):
@@ -87,18 +94,63 @@ def create_comment(request,pk):
 		return redirect('post_list')
 
 
+
+def like_post(request):
+	post = get_object_or_404(Post, id=request.POST.get('post_id'))
+	is_liked = False
+	if post.likes.filter(id=request.user.id).exists():
+		post.likes.remove(request.user)
+		is_liked = False
+	else:
+		post.likes.add(request.user)
+		is_liked = True
+	return redirect('post_list')
+
+
+
+
+
+
+
+def search(request):
+	friend = Friend.objects.get(current_user=request.user)
+	friends = friend.users.all()
+	if request.method == 'GET':
+
+		search_value = request.GET.get('search')
+
+		try:
+			status =User.objects.filter(username__icontains = search_value)
+
+		except Post.DoesNotExist:
+			status = None
+
+		return render(request, 'fb/search.html',{'status':status, 'friends':friends})
+	else:
+		return render(request, 'fb/search.html',{})
+
+
+def friends_list(request):
+	users = User.objects.exclude(id=request.user.id)
+	friend = Friend.objects.get(current_user=request.user)
+	friends = friend.users.all()
+
+	return render(request, 'fb/friends_list.html',{'friends':friends})
+
+
 # View to add friends 
+
 def change_friends(request, operation, pk):
     friend = User.objects.get(pk=pk)
     if operation == 'add':
         Friend.make_friend(request.user, friend)
     elif operation == 'remove':
         Friend.lose_friend(request.user, friend)
-    return redirect('post_list')	
+    return redirect('friends_list')	
 
 
 # View for REST api to display all posts in JSON
-class PostList(generics.ListAPIView):
+class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
@@ -117,3 +169,7 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+
+# class PostViewSet(viewsets.ModelViewSet):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer

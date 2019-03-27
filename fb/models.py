@@ -14,9 +14,11 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     created_date = models.DateTimeField(default=timezone.now)
     post_pics = models.FileField(upload_to = 'post_pics', blank=True)
+    likes = models.ManyToManyField(User,related_name='likes', blank=True)
     
 
-    
+    def total_likes(self):
+        return self.likes.count()
 
     def __str__(self):
         return self.title

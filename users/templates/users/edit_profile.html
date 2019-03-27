@@ -83,12 +83,17 @@ position:relative;
 
             <div class="container-fluid" style="background-color: #4267b2;">
                 <div class="navbar-header">
-                    <a class="navbar-brand" style="color:white;">facebook</a>
+                    <a class="navbar-brand" href="{% url 'post_list' %}" style="color:white;">facebook</a>
                 </div>
-               
+                <form class="navbar-form navbar-left" action="{% url 'search' %}" autocomplete="off">
+                      <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search" name="search">
+                      </div>
+                      <button type="submit" class="btn btn-default">Search</button>
+                </form>
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
-                      <li ><a href=""  class="top-menu" style="color: white;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" /> &nbsp{{ user.username }}</a></li>
+                      <li ><a href=""  class="top-menu" style="color: white;padding: 12px;"><img class="img-circle" src="{{ user.profile.image.url }}" height="30px" width="35px" /> &nbsp{{ user.username }}</a></li>
                        <li ><a href="{% url 'post_list' %}"  class="top-menu" style="color: white;">Home</a></li>
                       <li><a href="{% url 'logout' %}" class="top-menu" style="color:white;" >logout</a></li>
 
@@ -151,7 +156,7 @@ position:relative;
       </li>
        <li><a href="#">Archive</a></li>
           <li><a href="#">About</a></li>
-          <li><a href="#">Friends</a></li>
+          <li><a href="{% url 'friends_list' %}">Friends</a></li>
           <li><a href="#">More</a></li>
       
     </ul>
@@ -356,9 +361,6 @@ position:relative;
 <div id="chatnameboxp7" class="chat-sidebar"><img src="/static/css/prof.png"height="30"/></div>
 </div>
 
-
-
-    </body>
 
 </body>
 </html>
